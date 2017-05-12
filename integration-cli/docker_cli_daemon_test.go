@@ -88,8 +88,8 @@ func (s *DockerDaemonSuite) TestDaemonRestartWithVolumesRefs(c *check.C) {
 
 	s.d.Restart(c)
 
-	if _, err := s.d.Cmd("run", "-d", "--volumes-from", "volrestarttest1", "--name", "volrestarttest2", "busybox", "top"); err != nil {
-		c.Fatal(err)
+	if out, err := s.d.Cmd("run", "-d", "--volumes-from", "volrestarttest1", "--name", "volrestarttest2", "busybox", "top"); err != nil {
+		c.Fatal(err, out)
 	}
 
 	if out, err := s.d.Cmd("rm", "-fv", "volrestarttest2"); err != nil {
@@ -532,32 +532,6 @@ func (s *DockerDaemonSuite) TestDaemonKeyGeneration(c *check.C) {
 	// Test Key ID is a valid fingerprint (e.g. QQXN:JY5W:TBXI:MK3X:GX6P:PD5D:F56N:NHCS:LVRZ:JA46:R24J:XEFF)
 	if len(kid) != 59 {
 		c.Fatalf("Bad key ID: %s", kid)
-	}
-}
-
-func (s *DockerDaemonSuite) TestDaemonKeyMigration(c *check.C) {
-	// TODO: skip or update for Windows daemon
-	os.Remove("/etc/docker/key.json")
-	k1, err := libtrust.GenerateECP256PrivateKey()
-	if err != nil {
-		c.Fatalf("Error generating private key: %s", err)
-	}
-	if err := os.MkdirAll(filepath.Join(os.Getenv("HOME"), ".docker"), 0755); err != nil {
-		c.Fatalf("Error creating .docker directory: %s", err)
-	}
-	if err := libtrust.SaveKey(filepath.Join(os.Getenv("HOME"), ".docker", "key.json"), k1); err != nil {
-		c.Fatalf("Error saving private key: %s", err)
-	}
-
-	s.d.Start(c)
-	s.d.Stop(c)
-
-	k2, err := libtrust.LoadKeyFile("/etc/docker/key.json")
-	if err != nil {
-		c.Fatalf("Error opening key file")
-	}
-	if k1.KeyID() != k2.KeyID() {
-		c.Fatalf("Key not migrated")
 	}
 }
 
