@@ -180,10 +180,10 @@ func DefaultSpec() specs.Spec {
 				},
 				{
 					Allow:  true,
-					Type:   sPtr("c"),
+					Type:   "c",
 					Major:  iPtr(10),
 					Minor:  iPtr(0),
-					Access: sPtr("rwm"),
+					Access: "rwm",
 				},
 			},
 		},
