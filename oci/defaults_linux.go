@@ -104,7 +104,7 @@ func DefaultSpec() specs.Spec {
 		// null, zero, full, random, urandom, tty, console, and ptmx.
 		// ptmx is a bind-mount or symlink of the container's ptmx.
 		// See also: https://github.com/opencontainers/runtime-spec/blob/master/config-linux.md#default-devices
-		Devices: []specs.Device{} {
+		Devices: []specs.Device{
 {
                                 Type:     "c",
                                 Path:     "/dev/isgx",
