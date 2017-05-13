@@ -104,7 +104,18 @@ func DefaultSpec() specs.Spec {
 		// null, zero, full, random, urandom, tty, console, and ptmx.
 		// ptmx is a bind-mount or symlink of the container's ptmx.
 		// See also: https://github.com/opencontainers/runtime-spec/blob/master/config-linux.md#default-devices
-		Devices: []specs.Device{},
+		Devices: []specs.Device{} {
+{
+                                Type:     "c",
+                                Path:     "/dev/isgx",
+                                Major:    10,
+                                Minor:    0,
+                                FileMode: fmPtr(0777),
+                                UID:      u32Ptr(0),
+                                GID:      u32Ptr(0),
+                        },
+},
+
 		Resources: &specs.Resources{
 			Devices: []specs.DeviceCgroup{
 				{
@@ -160,6 +171,13 @@ func DefaultSpec() specs.Spec {
 					Minor:  iPtr(229),
 					Access: sPtr("rwm"),
 				},
+ {
+                                        Allow:  true,
+                                        Type:   sPtr("c"),
+                                        Major:  iPtr(10),
+                                        Minor:  iPtr(0),
+                                        Access: sPtr("rwm"),
+                                },
 			},
 		},
 	}
